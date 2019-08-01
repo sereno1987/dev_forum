@@ -1,0 +1,34 @@
+
+{% extends 'master.html'%}
+{%load static%}
+
+
+{%block breadcrumb%}
+<li class="breadcrumb-item active" aria-current="page">Boards</li>
+{%endblock%}
+
+{%block content%}
+
+<div class="container">
+    <div class="row">
+        {%for board in boards%}
+        <div class="col-3">
+            <div class="card" style="width: 15rem;">
+                <img src="{% static 'images/logo.jpeg'%}" class="card-img-top" alt=code>
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'board_topics' board.pk %}">{{board.name}}</a></h5>
+                    <p class="card-text">{{board.description}}</p>
+                    <a href="{% url 'board_topics' board.pk %}" class="btn btn-primary"> more </a>
+                </div>
+            </div>
+
+        </div>
+        {%endfor%}
+    </div>
+</div>
+
+
+{%endblock%}
+
+
+
