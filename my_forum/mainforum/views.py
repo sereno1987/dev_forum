@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.http import Http404
-from django.shortcuts  import render
+from django.shortcuts import render, get_object_or_404
 from .models import Boards, Topics, Posts
 # from django.shortcuts import get_object_or_404
 
@@ -13,10 +13,13 @@ def home(request):
 def board_topics(request,pk):
     try:
         boards = Boards.objects.get(pk=pk)
-        return render(request,"topic.html", {"boards":boards})
+        topics=Topics.objects
+        return render(request,"topic.html", {"boards":boards, "topics":topics})
     except Boards.DoesNotExist:
         raise Http404
 
-# def board_topics(request,pk):
-#     boards = get_object_or_404(Boards, pk=pk)
-#     return render(request,"topic.html", {"boards":boards})
+
+
+def message_topics(request,pk):
+    boards = get_object_or_404(Boards, pk=pk)
+    return render(request,"newTopic.html", {"boards":boards})
