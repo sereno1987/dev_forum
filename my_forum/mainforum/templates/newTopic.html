@@ -9,18 +9,19 @@
 
 {%block breadcrumb%}
 <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'home'%}">Boards</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{boards.name}}</li>{%endblock%}
+<li class="breadcrumb-item active" aria-current="page"><a href="{% url 'board_topics' boards.pk %}">{{boards.name}}</a></li>
+<li class="breadcrumb-item active" aria-current="page">New Topic</li>{%endblock%}
 
 {%block content%}
-<form>
+<form method="post">
+  {% csrf_token %}
   <div class="form-group">
-    <label for="exampleInputMessage">Subject</label>
-    <input type="text" class="form-control" id="exampleInputSubject" aria-describedby="emailHelp" placeholder="Enter subject">
-    <small id="emailHelp" class="form-text text-muted">please enter the subject of the topic.</small>
+    <label for="topic_id">Subject</label>
+    <input type="text" class="form-control" id="topic_id" aria-describedby="emailHelp" placeholder="subject" name="subject">
   </div>
   <div class="form-group">
-    <label for="exampleInputMessage">Password</label>
-    <input type="text" class="form-control" id="exampleInputMessage" placeholder="Message">
+    <label for="topic_Message">Text</label>
+    <textarea class="form-control" id="topic_Message" name="message" rows="6"></textarea>
   </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>

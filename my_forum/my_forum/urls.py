@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name="home"),
     path('boards/<int:pk>', views.board_topics, name="board_topics"),
-    path('boards/<int:pk>/newMessage/', views.message_topics, name="message_topics"),
+    path('boards/<int:pk>/newMessage/', views.new_topics, name="new_topics"),
 ]

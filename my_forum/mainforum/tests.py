@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
-from .views import home, board_topics
-from . models import Boards, Topics,Posts
+from .views import home, board_topics, new_topics
+from . models import Boards, Topics,Posts, User
 
 
 class Home_test(TestCase):
@@ -22,16 +22,11 @@ class Home_test(TestCase):
         self.assertContains(self.response, 'href="{0}"'.format(Board_to_topic_url))
 
     def test_topic_page_link_back_to_home_page(self):
-        Board_to_topic_url = reverse("board_topics", kwargs={'pk': 1})
+        Board_to_topic_url = reverse("board_topics", kwargs={'pk': self.board.pk})
         response = self.client.get(Board_to_topic_url)
         home_url = reverse('home')
         self.assertContains(response, 'href="{0}"'.format(home_url))
 
-    # def test_new_topic_page_link_back_to_home_page(self):
-    #     Board_to_new_topic_url = reverse("message_topics", kwargs={'pk': 1})
-    #     response = self.client.get(Board_to_new_topic_url)
-    #     home_url = reverse('home')
-    #     self.assertContains(response, 'href="{0}"'.format(home_url))
 
 
 class Board_topic_test(TestCase):
@@ -57,8 +52,50 @@ class Board_topic_test(TestCase):
 class New_topic_test(TestCase):
     def setUp(self):
         self.board = Boards.objects.create(name="Django", description="django framework")
+        User.objects.create_user(username="saba", email="saba@df.com", password="123")
 
     def test_new_topic_page_success_status(self):
-        url = reverse('message_topics', kwargs={'pk':self.board.pk})
+        url = reverse('new_topics', kwargs={'pk':self.board.pk})
         result = self.client.get(url)
         self.assertEquals(result.status_code, 200)
+
+    def test_new_topic_page_not_found_status(self):
+        url = reverse('new_topics', kwargs={'pk': 1000})
+        result = self.client.get(url)
+        self.assertEquals(result.status_code, 404)
+
+    def test_new_topic_view_url_navigation_link(self):
+        Board_to_topic_url = reverse("board_topics", kwargs={'pk': self.board.pk})
+        Board_to_new_topic_url = reverse("new_topics", kwargs={'pk': self.board.pk})
+        home_url = reverse('home')
+        response = self.client.get(Board_to_topic_url)
+        self.assertContains(response, 'href="{0}"'.format(home_url))
+        self.assertContains(response, 'href="{0}"'.format(Board_to_new_topic_url))
+
+
+    def test_new_topic_page_link_back_to_topic_page(self):
+        Board_to_new_topic_url = reverse("new_topics", kwargs={'pk': self.board.pk})
+        Board_to_topic_url = reverse("board_topics", kwargs={'pk':self.board.pk})
+        response = self.client.get(Board_to_new_topic_url)
+        self.assertContains(response, 'href="{0}"'.format(Board_to_topic_url))
+
+    def test_new_topic_page_link_back_to_home_page(self):
+        Board_to_new_topic_url = reverse("new_topics", kwargs={'pk': self.board.pk})
+        response = self.client.get(Board_to_new_topic_url)
+        home_url = reverse('home')
+        self.assertContains(response, 'href="{0}"'.format(home_url))
+
+    def test_csrf(self):
+        url = reverse("new_topics", kwargs={'pk': self.board.pk})
+        response = self.client.get(url)
+        self.assertContains(response,"csrfmiddlewaretoken")
+
+    def Test_new_topic_validation(self):
+        url = reverse("new_topics", kwargs={'pk': self.board.pk})
+        data={
+            'subject': "test",
+            'messafe': "message as test"
+        }
+        response = self.client.post(url, data)
+        self.assertTrue(Topics.objects.exists())
+        self.assertTrue(Posts.objects.exists())
