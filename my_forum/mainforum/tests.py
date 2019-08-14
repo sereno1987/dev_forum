@@ -90,11 +90,11 @@ class New_topic_test(TestCase):
         response = self.client.get(url)
         self.assertContains(response,"csrfmiddlewaretoken")
 
-    def Test_new_topic_validation(self):
+    def test_new_topic_validation(self):
         url = reverse("new_topics", kwargs={'pk': self.board.pk})
         data={
             'subject': "test",
-            'messafe': "message as test"
+            'message': "message as test"
         }
         response = self.client.post(url, data)
         self.assertTrue(Topics.objects.exists())

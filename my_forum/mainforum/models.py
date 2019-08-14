@@ -9,7 +9,7 @@ class Boards(models.Model):
 
 class Topics(models.Model):
     subject=models.CharField(max_length=225)
-    last_update=models.DateTimeField()
+    last_update=models.DateTimeField(auto_now_add=True)
     board=models.ForeignKey(Boards,related_name="topics",on_delete='cascade')
     creator=models.ForeignKey(User,related_name="topics", on_delete='cascade')
 
@@ -19,6 +19,6 @@ class Posts(models.Model):
     message=models.TextField(max_length=2000)
     topic=models.ForeignKey(Topics,related_name="posts",on_delete='cascade')
     Created_at=models.DateTimeField(auto_now_add=True)
-    last_update=models.DateTimeField(null=True)
+    last_update=models.DateTimeField(auto_now_add=True)
     creator=models.ForeignKey(User,related_name="posts",on_delete='cascade')
     updated_by=models.ForeignKey(User,related_name="posts_update",on_delete='cascade')
