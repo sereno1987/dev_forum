@@ -1,7 +1,6 @@
 
 {% extends 'master.html'%}
-{%load static%}
-
+{%load widget_tweaks%}
 {%block title%}
 {{board.name}}-{{block.super}}
 {%endblock%}
@@ -15,15 +14,25 @@
 {%block content%}
 <form method="post">
   {% csrf_token %}
-  <div class="form-group">
-    <label for="topic_id">Subject</label>
-    <input type="text" class="form-control" id="topic_id" aria-describedby="emailHelp" placeholder="subject" name="subject">
-  </div>
-  <div class="form-group">
-    <label for="topic_Message">Text</label>
-    <textarea class="form-control" id="topic_Message" name="message" rows="6"></textarea>
-  </div>
 
+
+<!--  using widget_tweaks-->
+
+  {% include 'includes/form.html' %}
+
+
+ <!--  with API-->
+<!--  {{ form.as_p }}-->
+
+<!--  without API-->
+<!--  <div class="form-group">-->
+<!--    <label for="topic_id">Subject</label>-->
+<!--    <input type="text" class="form-control" id="topic_id" aria-describedby="emailHelp" placeholder="subject" name="subject">-->
+<!--  </div>-->
+<!--  <div class="form-group">-->
+<!--    <label for="topic_Message">Text</label>-->
+<!--    <textarea class="form-control" id="topic_Message" name="message" rows="6"></textarea>-->
+<!--  </div>-->
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
