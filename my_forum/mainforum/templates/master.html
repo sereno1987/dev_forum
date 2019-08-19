@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link href="{% static 'css/app.css'%}" rel="stylesheet">
+    {%block stylesheet%}{%endblock%}
 
 </head>
 <body>
+{%block body%}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -193,6 +195,6 @@
     </div>
 </div>
 
-<!-- Footer -->
+{%endblock body%}
 </body>
 </html>
