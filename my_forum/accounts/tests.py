@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse, resolve
 from .views import signup
-
-
+from .forms import SignUpForm
 
 
 class SignUp_test(TestCase):
@@ -30,7 +29,7 @@ class SignUp_test(TestCase):
 
     def test_contains_form(self):
         form=self.response.context.get('form')
-        self.assertIsInstance(form, UserCreationForm)
+        self.assertIsInstance(form, SignUpForm)
 
 
 
@@ -39,6 +38,7 @@ class Successful_signUp_test(TestCase):
         url = reverse('signup')
         data={
             'username':'sabahaghighi',
+            'email':'saba@ghs.com',
             'password1':'1234567891',
             'password2':'123456789',
         }
@@ -55,6 +55,13 @@ class Successful_signUp_test(TestCase):
         response=self.client.get(self.home_url)
         user=response.context.get('user')
         self.assertTrue(user.is_authenticated)
+
+    def test_form_inputs(self):
+        ''' 5 inputs: csrf, username.....'''
+        self.assertContains(self.response, '<input',5)
+        self.assertContains(self.response, 'type="password"',2)
+        self.assertContains(self.response, 'type="email"',1)
+        self.assertContains(self.response, 'type="text"',1)
 
 
 
