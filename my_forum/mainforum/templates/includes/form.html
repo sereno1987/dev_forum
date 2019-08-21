@@ -2,7 +2,7 @@
 
  {% for field in form %}
     <div class="form-group">
-          {{ field.lable_tag }}
+          {{ field.label_tag }}
           {% if form.is_bound%}
             {% if form.errors%}
                 {% render_field field class="form-control is-invalid" %}

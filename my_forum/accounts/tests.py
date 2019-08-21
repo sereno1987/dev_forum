@@ -2,8 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse, resolve
-from .views import signup
-from .forms import SignUpForm
+from my_forum.accounts.views import signup
+from my_forum.accounts.forms import SignUpForm
 
 
 class SignUp_test(TestCase):
