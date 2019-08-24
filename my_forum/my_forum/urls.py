@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_view
 
 from mainforum import views
 from accounts import views as accounts_view
@@ -25,4 +26,6 @@ urlpatterns = [
     path('boards/<int:pk>', views.board_topics, name="board_topics"),
     path('boards/<int:pk>/newMessage/', views.new_topics, name="new_topics"),
     path('signup/', accounts_view.signup, name="signup"),
+    path('logout/', auth_view.LogoutView.as_view(), name="logout"),
+    path('login/', auth_view.LoginView.as_view(), name="login"),
 ]

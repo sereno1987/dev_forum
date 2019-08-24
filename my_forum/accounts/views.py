@@ -15,3 +15,7 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, "signup.html", {'form':form})
+
+def logout(request):
+    logout(request)
+    return redirect("home")
