@@ -22,3 +22,10 @@ class SignUpForm(UserCreationForm):
                                                                    'placeholder': 'Password '})
             self.fields['password2'].widget = PasswordInput(
                 attrs={'class': 'form-control', 'placeholder': 'Password confirmation'})
+
+
+class LoginForm(UserCreationForm):
+
+    class Meta:
+            model=User
+            fields=['username','password']

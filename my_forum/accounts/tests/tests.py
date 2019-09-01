@@ -1,10 +1,11 @@
-from django.contrib.auth.forms import UserCreationForm
+from unittest import skip
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse, resolve
-from my_forum.accounts.views import signup
-from my_forum.accounts.forms import SignUpForm
 
+from my_forum.accounts.forms import SignUpForm
+from my_forum.accounts.views import signup
 
 class SignUp_test(TestCase):
     def setUp(self):
@@ -23,14 +24,12 @@ class SignUp_test(TestCase):
     #     response = self.client.get(signup_page)
     #     home_url = reverse('home')
     #     self.assertContains(response, 'href="{0}"'.format(home_url))
-
     def test_csrf(self):
         self.assertContains(self.response, "csrfmiddlewaretoken")
 
     def test_contains_form(self):
         form=self.response.context.get('form')
         self.assertIsInstance(form, SignUpForm)
-
 
 
 class Successful_signUp_test(TestCase):
@@ -64,7 +63,7 @@ class Successful_signUp_test(TestCase):
         self.assertContains(self.response, 'type="text"',1)
 
 
-
+# @skip("Don't want to test")
 class UnsSuccessful_signUp_test(TestCase):
     def setUp(self):
         url = reverse('signup')

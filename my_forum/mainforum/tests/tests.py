@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
-from .views import home, board_topics, new_topics
-from . models import Boards, Topics,Posts, User
+from ..views import home, board_topics, new_topics
+from ..models import Boards, Topics,Posts, User
 
 
 class Home_test(TestCase):
