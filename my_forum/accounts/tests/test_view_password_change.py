@@ -39,3 +39,18 @@ class SuccesssfulPasswordChangeTest(PasswordChangeTest):
        response = self.client.get(reverse('home'))
        user=response.context.get('user')
        self.assertTrue(user.is_authenticated)
+
+
+class UnsuccesssfulPasswordChangeTest(PasswordChangeTest):
+    def test_status_code(self):
+        """ invalid form submisiion should be returned to the same page"""
+        self.assertEqual(self.response.status_code,200)
+
+    def test_form_errors(self):
+        form=self.response.context.get('form')
+        self.assertTrue(form.errors)
+
+    def test_didint_change_password(self):
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("old_password"))
+
