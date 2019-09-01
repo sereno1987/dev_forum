@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse, resolve
 
-from my_forum.accounts.forms import SignUpForm
-from my_forum.accounts.views import signup
+from ..forms import SignUpForm
+from ..views import signup
 
 class SignUp_test(TestCase):
     def setUp(self):
@@ -19,11 +19,6 @@ class SignUp_test(TestCase):
         route = resolve("/signup/")
         self.assertEquals(route.func, signup)
 
-    # def test_signup_link_back_to_home_page(self):
-    #     signup_page = reverse("signup")
-    #     response = self.client.get(signup_page)
-    #     home_url = reverse('home')
-    #     self.assertContains(response, 'href="{0}"'.format(home_url))
     def test_csrf(self):
         self.assertContains(self.response, "csrfmiddlewaretoken")
 
@@ -63,7 +58,6 @@ class Successful_signUp_test(TestCase):
         self.assertContains(self.response, 'type="text"',1)
 
 
-# @skip("Don't want to test")
 class UnsSuccessful_signUp_test(TestCase):
     def setUp(self):
         url = reverse('signup')
