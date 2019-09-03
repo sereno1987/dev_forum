@@ -23,6 +23,7 @@ Login
      <h3 class="card-title">Login</h3>
      <form method="post" novalidate>
       {% csrf_token%}
+      <input type="hidden" name="next" value="{{next}}">
       {% include 'includes/form.html' %}
       <button type="submit" class="btn btn-primary">Login</button>
      </form>

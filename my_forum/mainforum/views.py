@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Boards, Topics, Posts
 from .forms import TopicForm
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -19,30 +19,30 @@ def board_topics(request, pk):
     except Boards.DoesNotExist:
         raise Http404
 
+
 # using form API
+@login_required
 def new_topics(request, pk):
     board = get_object_or_404(Boards, pk=pk)
-    user = User.objects.first()
     if request.method == "POST":
         print("post")
-        form=TopicForm(request.POST)
+        form = TopicForm(request.POST)
         if form.is_valid():
-            topic=form.save(commit=False)
-            topic.board=board
-            topic.creator=user
+            topic = form.save(commit=False)
+            topic.board = board
+            topic.creator = request.user
             topic.save()
 
-            post=Posts.objects.create(
+            post = Posts.objects.create(
                 message=form.cleaned_data.get('message'),
-                creator= user,
-                topic = topic,
-                updated_by=user
+                creator=request.user,
+                topic=topic,
+                updated_by=request.user
             )
             return redirect('board_topics', pk=board.pk)
     else:
-         form=TopicForm()
-    return render(request, "newTopic.html", {"boards": board, "form":form})
-
+        form = TopicForm()
+    return render(request, "newTopic.html", {"boards": board, "form": form})
 
 
 # without form API
@@ -57,15 +57,22 @@ def new_topics(request, pk):
 #         topic = Topics.objects.create(
 #             subject=subject,
 #             board=board,
-#             creator=user
+#             creator=request.user
 #         )
 #
 #         post = Posts.objects.create(
 #             message=message,
 #             topic=topic,
-#             creator=user,
-#             updated_by=user
+#             creator=request.user,
+#             updated_by=request.user
 #         )
 #         return  redirect('board_topics', pk=board.pk)
 #
 #     return render(request, "newTopic.html", {"boards": board})
+
+# for posts
+def topic_posts(request, pk, topic_pk):
+    topic = get_object_or_404(Topics,  board__pk=pk, pk=topic_pk)
+    print("topic----------------------------------------------------")
+    print(topic.subject)
+    return render(request, "topic_posts.html", {"topics": topic})
