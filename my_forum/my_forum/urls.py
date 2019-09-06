@@ -38,5 +38,6 @@ urlpatterns = [
          name="password_change_done"),
 
     path('boards/<int:pk>/topics/<int:topic_pk>/', views.topic_posts, name="topic_posts"),
+    path('boards/<int:pk>/topics/<int:topic_pk>/reply/', views.reply_posts, name="reply_posts"),
 
 ]

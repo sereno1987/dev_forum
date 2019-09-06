@@ -1,9 +1,13 @@
 
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.timezone import now
+
 from .models import Boards, Topics, Posts
 from .forms import TopicForm
 from django.contrib.auth.decorators import login_required
+import timeago
+from datetime import datetime
 
 
 def home(request):
@@ -39,7 +43,7 @@ def new_topics(request, pk):
                 topic=topic,
                 updated_by=request.user
             )
-            return redirect('board_topics', pk=board.pk)
+            return redirect('topic_posts', pk=board.pk ,topic_pk=topic.pk)
     else:
         form = TopicForm()
     return render(request, "newTopic.html", {"boards": board, "form": form})
@@ -73,6 +77,8 @@ def new_topics(request, pk):
 # for posts
 def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topics,  board__pk=pk, pk=topic_pk)
-    print("topic----------------------------------------------------")
-    print(topic.subject)
-    return render(request, "topic_posts.html", {"topics": topic})
+    print("print--------------------------------------------------")
+    # print(Posts.objects.first().Created_at)
+    converted_time=Topics.objects.get(pk=topic_pk).last_update
+    created_at=timeago.format(converted_time, now())
+    return render(request, "topic_posts.html", {"topics": topic, "created_at": created_at})
