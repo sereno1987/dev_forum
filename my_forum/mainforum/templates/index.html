@@ -18,6 +18,28 @@
                 <div class="card-body">
                     <h5 class="card-title"><a href="{% url 'board_topics' board.pk %}">{{board.name}}</a></h5>
                     <p class="card-text">{{board.description}}</p>
+                    <div>
+                        <small class="tect-muted">Topics:{{board.topics.count}}</small>
+                    </div>
+                    <div>
+                        <small class="tect-muted">Posts:{{board.get_post_count}}</small>
+
+                    </div>
+                    {% with post=board.get_last_post%}
+                    {% if post %}
+                    <div>
+                        <small class="text-muted">
+                            <a href="{% url 'topic_posts' board.pk post.topic.pk %}">
+                              Created at :{{post.Created_at}} By {{user.username}}
+                            </a>
+                        </small>
+                    </div>
+                    {% else %}
+                    <small class="text-muted">
+                        <em> No post</em>
+                    </small>
+                    {% endif %}
+                    {% endwith%}
                     <a href="{% url 'board_topics' board.pk %}" class="btn btn-primary"> more </a>
                 </div>
             </div>

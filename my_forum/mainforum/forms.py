@@ -1,5 +1,6 @@
 from django import forms
-from .models import Topics
+from .models import Topics, Posts
+
 
 class TopicForm(forms.ModelForm):
     # message in from another model
@@ -11,3 +12,8 @@ class TopicForm(forms.ModelForm):
     class Meta:
         model=Topics
         fields=['subject','message']
+
+class ReplyForm(forms.ModelForm):
+      class Meta:
+        model = Posts
+        fields = ['message',]

@@ -1,10 +1,10 @@
 
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.timezone import now
 
 from .models import Boards, Topics, Posts
-from .forms import TopicForm
+from .forms import TopicForm, ReplyForm
 from django.contrib.auth.decorators import login_required
 import timeago
 from datetime import datetime
@@ -12,8 +12,8 @@ from datetime import datetime
 
 def home(request):
     boards = Boards.objects.all()
-    board_num = (Boards.objects.all().count())
-    return render(request, "index.html", {"boards": boards, "board_num": board_num})
+    posts = Posts.objects.all()
+    return render(request, "index.html", {"boards": boards, "posts":posts})
 
 
 def board_topics(request, pk):
@@ -77,8 +77,26 @@ def new_topics(request, pk):
 # for posts
 def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topics,  board__pk=pk, pk=topic_pk)
-    print("print--------------------------------------------------")
-    # print(Posts.objects.first().Created_at)
     converted_time=Topics.objects.get(pk=topic_pk).last_update
     created_at=timeago.format(converted_time, now())
+
     return render(request, "topic_posts.html", {"topics": topic, "created_at": created_at})
+
+
+@login_required
+def reply_posts(request, pk, topic_pk):
+    topic = get_object_or_404(Topics,  board__pk=pk, pk=topic_pk)
+    converted_time = Topics.objects.get(pk=topic_pk).last_update
+    created_at = timeago.format(converted_time, now())
+    if request.method == "POST":
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.topic= topic
+            post.creator = request.user
+            post.updated_by= request.user
+            post.save()
+            return redirect('topic_posts', pk=pk ,topic_pk=topic.pk)
+    else:
+        form = ReplyForm()
+    return render(request, "reply_posts.html", {"topics": topic, "form": form,"created_at": created_at})
