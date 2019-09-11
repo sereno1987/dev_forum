@@ -12,9 +12,9 @@
 <div class="container">
     <div class="row">
         {%for board in boards%}
-        <div class="col-3">
-            <div class="card" style="width: 15rem;">
-                <img src="{% static 'images/logo.jpeg'%}" class="card-img-top" alt=code>
+        <div class="col-3 mb-3">
+            <div class="card card-img-top" style="width: 15rem;">
+                <img src="{% static 'images/logo.jpeg'%}" class="card-img-top " alt=code>
                 <div class="card-body">
                     <h5 class="card-title"><a href="{% url 'board_topics' board.pk %}">{{board.name}}</a></h5>
                     <p class="card-text">{{board.description}}</p>
@@ -28,16 +28,22 @@
                     {% with post=board.get_last_post%}
                     {% if post %}
                     <div>
+                        <hr>
                         <small class="text-muted">
                             <a href="{% url 'topic_posts' board.pk post.topic.pk %}">
                               Created at :{{post.Created_at}} By {{user.username}}
                             </a>
                         </small>
+
                     </div>
                     {% else %}
+
+                    <div class="mb-4">
+                        <hr>
                     <small class="text-muted">
                         <em> No post</em>
                     </small>
+                    </div>
                     {% endif %}
                     {% endwith%}
                     <a href="{% url 'board_topics' board.pk %}" class="btn btn-primary"> more </a>
