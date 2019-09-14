@@ -20,6 +20,7 @@ class Topics(models.Model):
     last_update=models.DateTimeField(auto_now_add=True)
     board=models.ForeignKey(Boards,related_name="topics",on_delete='cascade')
     creator=models.ForeignKey(User,related_name="topics", on_delete='cascade')
+    views=models.PositiveIntegerField(default=0)
     # as we call the string it will print the name
     def __str__(self):
         return self.subject

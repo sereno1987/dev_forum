@@ -79,9 +79,10 @@ def new_topics(request, pk):
 # for posts
 def topic_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topics,  board__pk=pk, pk=topic_pk)
+    topic.views +=1
+    topic.save()
     converted_time=Topics.objects.get(pk=topic_pk).last_update
     created_at=timeago.format(converted_time, now())
-
     return render(request, "topic_posts.html", {"topics": topic, "created_at": created_at})
 
 

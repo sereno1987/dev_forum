@@ -36,7 +36,7 @@ from django.core.paginator import Paginator
         {%else %}
             <td>{{topic.replies}}</td>
         {%endif%}
-        <td>0</td>
+        <td>{{topic.views}}</td>
         <td>{{topic.last_update}}</td>
 
     </tr>
