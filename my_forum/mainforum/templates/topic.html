@@ -27,11 +27,15 @@ from django.core.paginator import Paginator
     </tr>
     </thead>
     <tbody>
-    {% for topic in boards.topics.all %}
+    {% for topic in topics %}
     <tr>
         <td><a href="{% url 'topic_posts' topic.board.pk topic.pk %}">{{topic.subject}}</a></td>
         <td>{{user.username}}</td>
-        <td>0</td>
+        {% if topic.replies < 0 %}
+            <td>0</td>
+        {%else %}
+            <td>{{topic.replies}}</td>
+        {%endif%}
         <td>0</td>
         <td>{{topic.last_update}}</td>
 

@@ -7,7 +7,7 @@ from .models import Boards, Topics, Posts
 from .forms import TopicForm, ReplyForm
 from django.contrib.auth.decorators import login_required
 import timeago
-from datetime import datetime
+from django.db.models import Count
 
 
 def home(request):
@@ -19,7 +19,9 @@ def home(request):
 def board_topics(request, pk):
     try:
         board = Boards.objects.get(pk=pk)
-        return render(request, "topic.html", {"boards": board})
+        topics=board.topics.order_by('-last_update').annotate(replies=Count('posts')-1)
+        views=board.topics.order_by('-last_update').annotate(replies=Count('posts')-1)
+        return render(request, "topic.html", {"boards": board , "topics":topics})
     except Boards.DoesNotExist:
         raise Http404
 
