@@ -1,6 +1,7 @@
 
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.timezone import now
 
 from .models import Boards, Topics, Posts
@@ -8,6 +9,7 @@ from .forms import TopicForm, ReplyForm
 from django.contrib.auth.decorators import login_required
 import timeago
 from django.db.models import Count
+from django.views.generic import View, CreateView, UpdateView, DeleteView,ListView
 
 
 def home(request):
@@ -89,8 +91,8 @@ def topic_posts(request, pk, topic_pk):
 @login_required
 def reply_posts(request, pk, topic_pk):
     topic = get_object_or_404(Topics,  board__pk=pk, pk=topic_pk)
-    converted_time = Topics.objects.get(pk=topic_pk).last_update
-    created_at = timeago.format(converted_time, now())
+    # converted_time = Topics.objects.get(pk=topic_pk).last_update
+    # created_at = timeago.format(converted_time, now())
     if request.method == "POST":
         form = ReplyForm(request.POST)
         if form.is_valid():
@@ -102,4 +104,19 @@ def reply_posts(request, pk, topic_pk):
             return redirect('topic_posts', pk=pk ,topic_pk=topic.pk)
     else:
         form = ReplyForm()
-    return render(request, "reply_posts.html", {"topics": topic, "form": form,"created_at": created_at})
+    return render(request, "reply_posts.html", {"topics": topic, "form": form})
+
+# GCBV generic class based view
+class PostUpdateView(UpdateView):
+    model = Posts
+    fields = ["message",]
+    template_name = 'edit_post.html'
+    pk_url_kwarg = 'post_pk'
+    context_object_name = 'post'
+    def form_valid(self,form):
+        post = form.save(commit=False)
+        post.creator = self.request.user
+        post.updated_by= self.request.user
+        post.last_update=timezone.now()
+        post.save()
+        return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
